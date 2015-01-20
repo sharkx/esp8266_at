@@ -11,20 +11,20 @@ BUILD_BASE	= build
 FW_BASE		= firmware
 
 # Base directory for the compiler
-XTENSA_TOOLS_ROOT ?= c:/Espressif/xtensa-lx106-elf/bin
+XTENSA_TOOLS_ROOT ?= /opt/Espressif/crosstool-NG/builds/xtensa-lx106-elf/bin
 
 # base directory of the ESP8266 SDK package, absolute
-SDK_BASE	?= c:/Espressif/ESP8266_SDK
+SDK_BASE	?= /opt/Espressif/ESP8266_SDK
 
 #Esptool.py path and port
-ESPTOOL		?= c:\Espressif\utils\esptool.exe
-ESPPORT		?= COM3
+ESPTOOL		?= esptool.py
+ESPPORT		?= /dev/ttyUSB0
 
 # name for the target project
 TARGET		= app
 
 # which modules (subdirectories) of the project to include in compiling
-MODULES		= driver user user/frames
+MODULES		= driver user
 EXTRA_INCDIR    = include $(SDK_BASE)/../include
 
 # libraries used in this project, mainly provided by the SDK
@@ -59,7 +59,7 @@ LD		:= $(XTENSA_TOOLS_ROOT)/xtensa-lx106-elf-gcc
 ####
 #### no user configurable options below here
 ####
-FW_TOOL		?= $(XTENSA_TOOLS_ROOT)/esptool
+FW_TOOL		?= /usr/bin/esptool
 SRC_DIR		:= $(MODULES)
 BUILD_DIR	:= $(addprefix $(BUILD_BASE)/,$(MODULES))
 
@@ -127,12 +127,10 @@ firmware:
 	$(Q) mkdir -p $@
 
 flash: firmware/0x00000.bin firmware/0x40000.bin
-	$(ESPTOOL) -p $(ESPPORT) write_flash 0x00000 firmware/0x00000.bin 0x40000 firmware/0x40000.bin
+	$(ESPTOOL) --port $(ESPPORT) write_flash 0x00000 firmware/0x00000.bin 0x40000 firmware/0x40000.bin
 
 test: flash
 	screen $(ESPPORT) 115200
-
-rebuild: clean all
 
 clean:
 	$(Q) rm -f $(APP_AR)

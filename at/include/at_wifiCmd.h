@@ -18,6 +18,8 @@
 #ifndef __AT_WIFICMD_H
 #define __AT_WIFICMD_H
 
+extern uint8_t at_wifiMode;
+
 void at_testCmdCwmode(uint8_t id);
 void at_queryCmdCwmode(uint8_t id);
 void at_setupCmdCwmode(uint8_t id, char *pPara);

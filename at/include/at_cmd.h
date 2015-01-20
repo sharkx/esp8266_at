@@ -20,6 +20,7 @@
 
 #include "at.h"
 #include "at_wifiCmd.h"
+#include "at_miscCmd.h"
 #include "at_ipCmd.h"
 #include "at_baseCmd.h"
 
@@ -32,6 +33,7 @@ at_funcationType at_fun[at_cmdNum]={
   {"+GMR", 4, NULL, NULL, NULL, at_exeCmdGmr},
   {"+GSLP", 5, NULL, NULL, at_setupCmdGslp, NULL},
   {"+IPR", 4, NULL, NULL, at_setupCmdIpr, NULL},
+  {"+COM", 4, at_testCmdCOMMode, at_queryCmdCOMMode, at_setupCmdCOMMode, NULL},
 #ifdef ali
   {"+UPDATE", 7, NULL, NULL, NULL, at_exeCmdUpdate},
 #endif

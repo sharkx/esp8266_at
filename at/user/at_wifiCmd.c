@@ -184,7 +184,7 @@ scan_done(void *arg, STATUS status)
     at_backError;
   }
   specialAtState = TRUE;
-  at_state = at_statIdle;
+  at_state = statIdle;
 }
 
 //void ICACHE_FLASH_ATTR
@@ -351,7 +351,7 @@ at_japChack(void *arg)
     chackTime = 0;
     at_backOk;
     specialAtState = TRUE;
-    at_state = at_statIdle;
+    at_state = statIdle;
     return;
   }
   else if(chackTime >= 7)
@@ -362,7 +362,7 @@ at_japChack(void *arg)
     uart0_sendStr(temp);
     uart0_sendStr("\r\nFAIL\r\n");
     specialAtState = TRUE;
-    at_state = at_statIdle;
+    at_state = statIdle;
     return;
   }
   os_timer_arm(&at_japDelayChack, 2000, 0);

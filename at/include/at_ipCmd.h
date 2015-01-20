@@ -22,14 +22,13 @@
 
 typedef enum
 {
-  teClient,
-  teServer
-}teType;
+	teClient, teServer
+} teType;
 
 typedef struct
 {
 	BOOL linkEn;
-  BOOL teToff;
+	BOOL teToff;
 	uint8_t linkId;
 	teType teType;
 	uint8_t repeaTime;
@@ -37,7 +36,7 @@ typedef struct
 	uint8 remoteIp[4];
 	int32_t remotePort;
 	struct espconn *pCon;
-}at_linkConType;
+} at_linkConType;
 
 void at_testCmdCifsr(uint8_t id);
 void at_setupCmdCifsr(uint8_t id, char *pPara);

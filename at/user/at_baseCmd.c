@@ -21,7 +21,7 @@
 #include "at.h"
 #include "at_baseCmd.h"
 #include "user_interface.h"
-#include "at_version.h"
+#include "version.h"
 #include "driver/uart_register.h"
 
 /** @defgroup AT_BASECMD_Functions
@@ -98,6 +98,8 @@ at_exeCmdGmr(uint8_t id)
   os_sprintf(temp, AT_VERSION);
   uart0_sendStr(temp);
   os_sprintf(temp,"%s\r\n", system_get_sdk_version());
+  uart0_sendStr(temp);
+  os_sprintf(temp,"compiled @ %s %s\r\n", __DATE__, __TIME__);
   uart0_sendStr(temp);
   at_backOk;
 }

@@ -19,6 +19,7 @@
 #include "driver/uart.h"
 #include "osapi.h"
 #include "at.h"
+#include "frame.h"
 
 extern uint8_t at_wifiMode;
 extern void user_esp_platform_load_param(void *param, uint16 len);
@@ -32,14 +33,20 @@ void user_init(void)
   user_esp_platform_load_param((uint32 *)&tempUart, sizeof(at_uartType));
   if(tempUart.saved == 1)
   {
-    uart_init(tempUart.baud, BIT_RATE_115200);
+    uart_init(tempUart.baud, BIT_RATE_19200);
   }
   else
   {
-    uart_init(BIT_RATE_115200, BIT_RATE_115200);
+    uart_init(BIT_RATE_19200, BIT_RATE_19200);
   }
+
   at_wifiMode = wifi_get_opmode();
-  os_printf("\r\nready!!!\r\n");
-  uart0_sendStr("\r\nready\r\n");
+
+  // accept all commands and reply as frames
+  g_comProtocolMode = COM_INBOUND_BOTH | COM_OUTBOUND_FRAME;
+
+  os_printf("ready!!!\r\n");
+  uart0_sendStr("ready\r\n");
+
   at_init();
 }
