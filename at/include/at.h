@@ -20,6 +20,17 @@
 
 #include "c_types.h"
 
+#define COM_INBOUND_AT				0x01
+#define COM_INBOUND_FRAME			0x02
+#define COM_OUTBOUND_FRAME			0x04
+#define COM_INBOUND_BOTH			(COM_INBOUND_AT|COM_INBOUND_FRAME)
+#define COM_INBOUND_MASK			(COM_INBOUND_AT|COM_INBOUND_FRAME)
+#define COM_MASK					(COM_INBOUND_AT|COM_INBOUND_FRAME|COM_OUTBOUND_FRAME)
+
+#define FRAME_MARKER		0x80
+
+extern uint8_t g_comProtocolMode;
+
 //#define at_busyTaskPrio        1
 //#define at_busyTaskQueueLen    4
 
@@ -31,45 +42,41 @@
 #define at_procTaskPrio        1
 #define at_procTaskQueueLen    1
 
-#define at_backOk        uart0_sendStr("\r\nOK\r\n")
-#define at_backError     uart0_sendStr("\r\nERROR\r\n")
+#define at_backOk        uart0_sendStr("OK\r\n")
+#define at_backError     uart0_sendStr("KO\r\n")
 #define at_backTeError   "+CTE ERROR: %d\r\n"
 
-typedef enum{
-  at_statIdle,
-  at_statRecving,
-  at_statProcess,
-  at_statIpSending,
-  at_statIpSended,
-  at_statIpTraning
-}at_stateType;
+typedef enum
+{
+	statIdle, at_statRecving, at_statProcess, at_statIpSending, at_statIpSended, at_statIpTraning, frame_statRecv
+} at_stateType;
 
-typedef enum{
-  m_init,
-  m_wact,
-  m_gotip,
-  m_linked,
-  m_unlink,
-  m_wdact
-}at_mdStateType;
+typedef enum
+{
+	m_init, m_wact, m_gotip, m_linked, m_unlink, m_wdact
+} at_mdStateType;
 
 typedef struct
 {
 	char *at_cmdName;
 	int8_t at_cmdLen;
-  void (*at_testCmd)(uint8_t id);
-  void (*at_queryCmd)(uint8_t id);
-  void (*at_setupCmd)(uint8_t id, char *pPara);
-  void (*at_exeCmd)(uint8_t id);
-}at_funcationType;
+	void (*at_testCmd)(uint8_t id);
+	void (*at_queryCmd)(uint8_t id);
+	void (*at_setupCmd)(uint8_t id, char *pPara);
+	void (*at_exeCmd)(uint8_t id);
+} at_funcationType;
 
 typedef struct
 {
-  uint32_t baud;
-  uint32_t saved;
-}at_uartType;
+	uint32_t baud;
+	uint32_t saved;
+} at_uartType;
 
 void at_init(void);
 void at_cmdProcess(uint8_t *pAtRcvData);
+
+extern at_stateType at_state;
+extern struct espconn *pTcpServer;
+extern struct espconn *pUdpServer;
 
 #endif
