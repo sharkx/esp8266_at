@@ -42,6 +42,7 @@ frame.h
 #include "frames/CWQAP.h"
 #include "frames/CIPSTART.h"
 #include "frames/CIPSERVER.h"
+#include "frames/CIPMUX.h"
 
 #define FRAME_MAGIC				0x88
 
@@ -103,6 +104,7 @@ frame.h
 #define FRAME_CMD_CWQAP					(FRAME_CMD_BASE + 0x04)
 #define FRAME_CMD_CIPSTART				(FRAME_CMD_BASE + 0x05)
 #define FRAME_CMD_CIPSERVER				(FRAME_CMD_BASE + 0x06)
+#define FRAME_CMD_CIPMUX				(FRAME_CMD_BASE + 0x07)
 
 
 #define SUCCESS					0x00

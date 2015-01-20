@@ -75,6 +75,8 @@ typedef struct
 void at_init(void);
 void at_cmdProcess(uint8_t *pAtRcvData);
 
+extern BOOL at_ipMux;
+extern at_mdStateType mdState;
 extern at_stateType at_state;
 extern struct espconn *pTcpServer;
 extern struct espconn *pUdpServer;

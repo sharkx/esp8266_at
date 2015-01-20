@@ -44,7 +44,8 @@ os_timer_t at_delayCheck;
 BOOL IPMODE;
 uint8_t ipDataSendFlag = 0;
 
-static BOOL at_ipMux = FALSE;
+// allow multiple by default
+BOOL at_ipMux = TRUE;
 static BOOL disAllFlag = FALSE;
 
 static at_linkConType pLink[at_linkMax];
