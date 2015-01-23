@@ -18,25 +18,7 @@
 #ifndef __AT_IPCMD_H
 #define __AT_IPCMD_H
 
-#define at_linkMax 5
-
-typedef enum
-{
-	teClient, teServer
-} teType;
-
-typedef struct
-{
-	BOOL linkEn;
-	BOOL teToff;
-	uint8_t linkId;
-	teType teType;
-	uint8_t repeaTime;
-	uint8_t changType;
-	uint8 remoteIp[4];
-	int32_t remotePort;
-	struct espconn *pCon;
-} at_linkConType;
+#include "ip.h"
 
 void at_testCmdCifsr(uint8_t id);
 void at_setupCmdCifsr(uint8_t id, char *pPara);

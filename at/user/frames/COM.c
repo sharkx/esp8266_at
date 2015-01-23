@@ -40,7 +40,7 @@ uint8_t command_COM_handler(uint8_t* frame)
 
 	if ((newMode & COM_INBOUND_MASK) == 0)
 	{
-		return sendErrorFrame(frame, ERROR_INVALID_PARAM);
+		return sendResultFrame(frame, ERROR_INVALID_PARAM);
 	}
 
 	// process command first (trim out not used bits)

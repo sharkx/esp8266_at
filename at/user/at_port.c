@@ -153,7 +153,7 @@ at_recvTask(os_event_t *events)
 					else
 					{
 						// frame is invalid; send back error
-						sendErrorFrame(dataFrameIn, ERROR_INVALID_FRAME);
+						sendResultFrame(dataFrameIn, ERROR_INVALID_FRAME);
 					}
 				}
 			}

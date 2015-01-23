@@ -48,15 +48,15 @@ uint8_t ipDataSendFlag = 0;
 BOOL at_ipMux = TRUE;
 static BOOL disAllFlag = FALSE;
 
-static at_linkConType pLink[at_linkMax];
-static uint8_t sendingID;
-static BOOL serverEn = FALSE;
-static at_linkNum = 0;
+at_linkConType pLink[at_linkMax];
+uint8_t sendingID;
+BOOL serverEn = FALSE;
+uint8_t at_linkNum = 0;
 
-//static uint8_t repeat_time = 0;
-static uint16_t server_timeover = 180;
-struct espconn *pTcpServer;
-struct espconn *pUdpServer;
+uint8_t repeat_time = 0;
+uint16_t server_timeover = 180;
+struct espconn *pTcpServer = NULL;
+struct espconn *pUdpServer = NULL;
 
 /** @defgroup AT_IPCMD_Functions
  * @{
@@ -1541,7 +1541,7 @@ at_tcpserver_recon_cb(void *arg, sint8 errType)
  * @param  arg: contain the ip link information
  * @retval None
  */
-LOCAL void ICACHE_FLASH_ATTR
+void ICACHE_FLASH_ATTR
 at_tcpserver_listen(void *arg)
 {
 	struct espconn *pespconn = (struct espconn *) arg;
@@ -1590,52 +1590,52 @@ at_tcpserver_listen(void *arg)
 //  * @param  arg: contain the ip link information
 //  * @retval None
 //  */
-//LOCAL void ICACHE_FLASH_ATTR
-//at_udpserver_recv(void *arg, char *pusrdata, unsigned short len)
-//{
-//  struct espconn *pespconn = (struct espconn *)arg;
-//  at_linkConType *linkTemp;
-//  char temp[32];
-//  uint8_t i;
-//
-//  os_printf("get udpClient:\r\n");
-//
-//  if(pespconn->reverse == NULL)
-//  {
-//    for(i = 0;i < at_linkMax;i++)
-//    {
-//      if(pLink[i].linkEn == FALSE)
-//      {
-//        pLink[i].linkEn = TRUE;
-//        break;
-//      }
-//    }
-//    if(i >= 5)
-//    {
-//      return;
-//    }
-//    pLink[i].teToff = FALSE;
-//    pLink[i].linkId = i;
-//    pLink[i].teType = teServer;
-//    pLink[i].repeaTime = 0;
-//    pLink[i].pCon = pespconn;
-//    espconn_regist_sentcb(pLink[i].pCon, at_tcpclient_sent_cb);
-//    mdState = m_linked;
-//    at_linkNum++;
-//    pespconn->reverse = &pLink[i];
-//    uart0_sendStr("Link\r\n");
-//  }
-//  linkTemp = (at_linkConType *)pespconn->reverse;
-//  if(pusrdata == NULL)
-//  {
-//    return;
-//  }
-//  os_sprintf(temp, "\r\n+IPD,%d,%d:",
-//             linkTemp->linkId, len);
-//  uart0_sendStr(temp);
-//  uart0_tx_buffer(pusrdata, len);
-//  at_backOk;
-//}
+void ICACHE_FLASH_ATTR
+at_udpserver_recv(void *arg, char *pusrdata, unsigned short len)
+{
+  struct espconn *pespconn = (struct espconn *)arg;
+  at_linkConType *linkTemp;
+  char temp[32];
+  uint8_t i;
+
+  os_printf("get udpClient:\r\n");
+
+  if(pespconn->reverse == NULL)
+  {
+    for(i = 0;i < at_linkMax;i++)
+    {
+      if(pLink[i].linkEn == FALSE)
+      {
+        pLink[i].linkEn = TRUE;
+        break;
+      }
+    }
+    if(i >= 5)
+    {
+      return;
+    }
+    pLink[i].teToff = FALSE;
+    pLink[i].linkId = i;
+    pLink[i].teType = teServer;
+    pLink[i].repeaTime = 0;
+    pLink[i].pCon = pespconn;
+    espconn_regist_sentcb(pLink[i].pCon, at_tcpclient_sent_cb);
+    mdState = m_linked;
+    at_linkNum++;
+    pespconn->reverse = &pLink[i];
+    uart0_sendStr("Link\r\n");
+  }
+  linkTemp = (at_linkConType *)pespconn->reverse;
+  if(pusrdata == NULL)
+  {
+    return;
+  }
+  os_sprintf(temp, "\r\n+IPD,%d,%d:",
+             linkTemp->linkId, len);
+  uart0_sendStr(temp);
+  uart0_tx_buffer(pusrdata, len);
+  at_backOk;
+}
 
 /**
  * @brief  Setup commad of module as server.

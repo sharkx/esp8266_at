@@ -54,7 +54,7 @@ uint8_t command_CWMODE_handler(uint8_t* frame)
 	else
 	{
 		// KO back
-		return sendErrorFrame(frame, ERROR_INVALID_PARAM);
+		return sendResultFrame(frame, ERROR_INVALID_PARAM);
 	}
 
 	// unreachable code

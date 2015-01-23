@@ -68,7 +68,7 @@ uint8_t processFrame(uint8_t* frame)
 
 	if (handler == NULL)
 	{
-		return sendErrorFrame(frame, ERROR_NO_FRAME_HANDLER);
+		return sendResultFrame(frame, ERROR_NO_FRAME_HANDLER);
 	}
 	else
 	{
@@ -103,7 +103,7 @@ uint8_t* checksum(uint8_t* frame)
 	return frame;
 }
 
-uint8_t sendErrorFrame(uint8_t* frameIn, uint8_t errorCode)
+uint8_t sendResultFrame(uint8_t* frameIn, uint8_t errorCode)
 {
 	uint8_t i = 0;
 	uint8_t respFrame[FRAME_LENGTH_SHORT];

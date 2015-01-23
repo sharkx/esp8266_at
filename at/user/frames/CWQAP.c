@@ -35,13 +35,13 @@ uint8_t command_CWQAP_handler(uint8_t* frame)
 	if (CWJAPstatus == INFO_CWJAP_AP_NONE)
 	{
 		// already connected; disconnect first
-		return sendErrorFrame(frame, ERROR_AP_NOT_CONNECTED);
+		return sendResultFrame(frame, ERROR_AP_NOT_CONNECTED);
 	}
 
 	if (CWJAPstatus == INFO_CWJAP_AP_PENDING)
 	{
 		// there is already a pending connection
-		return sendErrorFrame(frame, ERROR_AP_CONNECTION_PENDING);
+		return sendResultFrame(frame, ERROR_AP_CONNECTION_PENDING);
 	}
 
 	// disconnect !

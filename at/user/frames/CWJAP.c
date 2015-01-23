@@ -35,7 +35,7 @@ uint8_t request_CWJAP_handler(uint8_t* frame)
 	if ((ipInfo.ip.addr == 0) || (stationConf.ssid == 0))
 	{
 		// respond with current status; it is either INFO_CWJAP_AP_NONE or INFO_CWJAP_AP_PENDING
-		return sendErrorFrame(frame, CWJAPstatus);
+		return sendResultFrame(frame, CWJAPstatus);
 	}
 
 	// otherwise, we're connected
@@ -111,7 +111,7 @@ timer_fun_CWJAPCheck(void *arg)
 		}
 		else
 		{
-			sendErrorFrame(NULL, ERROR_AP_CONNECTION_TIMEOUT);
+			sendResultFrame(NULL, ERROR_AP_CONNECTION_TIMEOUT);
 		}
 	}
 }
@@ -125,18 +125,18 @@ uint8_t command_CWJAP_handler(uint8_t* frame)
 	if (CWJAPstatus == INFO_CWJAP_AP_CONN)
 	{
 		// already connected; disconnect first
-		return sendErrorFrame(frame, ERROR_AP_ALREADY_CONNECTED);
+		return sendResultFrame(frame, ERROR_AP_ALREADY_CONNECTED);
 	}
 
 	if (CWJAPstatus == INFO_CWJAP_AP_PENDING)
 	{
 		// there is already a pending connection
-		return sendErrorFrame(frame, ERROR_AP_CONNECTION_PENDING);
+		return sendResultFrame(frame, ERROR_AP_CONNECTION_PENDING);
 	}
 
 	if ((at_wifiMode & CWMODE_STANDALONE) == 0)
 	{
-		return sendErrorFrame(frame, ERROR_AP_ONLY_APMODE);
+		return sendResultFrame(frame, ERROR_AP_ONLY_APMODE);
 	}
 
 	os_bzero(&stationConf, sizeof(struct station_config));

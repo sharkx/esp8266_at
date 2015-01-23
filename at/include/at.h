@@ -19,6 +19,7 @@
 #define __AT_H
 
 #include "c_types.h"
+#include "ip.h"
 
 #define COM_INBOUND_AT				0x01
 #define COM_INBOUND_FRAME			0x02
@@ -80,5 +81,11 @@ extern at_mdStateType mdState;
 extern at_stateType at_state;
 extern struct espconn *pTcpServer;
 extern struct espconn *pUdpServer;
+extern uint8_t repeat_time;
+extern uint16_t server_timeover;
+extern at_linkConType pLink[at_linkMax];
+extern uint8_t sendingID;
+extern BOOL serverEn;
+extern uint8_t at_linkNum;
 
 #endif

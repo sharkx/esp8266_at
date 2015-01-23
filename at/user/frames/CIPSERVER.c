@@ -32,18 +32,21 @@ uint8_t request_CIPSERVER_handler(uint8_t* frame)
 
 	if (pTcpServer == NULL)
 	{
-		return sendErrorFrame(frame, INFO_CIPSERVER_NO_SERVER);
+		return sendResultFrame(frame, INFO_CIPSERVER_NO_SERVER);
 	}
 
-	respFrame[FRAME_POS_MAGIC] 			= FRAME_MAGIC;
-	respFrame[FRAME_POS_TYPE] 			= MAKE_RESP_TYPE(FRAME_CMD_CIPSERVER);
-	respFrame[FRAME_POS_SIZE_LSB] 		= LOBYTE(FRAME_SIZE_CIPSERVER);
-	respFrame[FRAME_POS_SIZE_MSB] 		= HIBYTE(FRAME_SIZE_CIPSERVER);
-	respFrame[FRAME_POS_SEQ] 			= frame[FRAME_POS_SEQ];
+	respFrame[FRAME_POS_MAGIC] = FRAME_MAGIC;
+	respFrame[FRAME_POS_TYPE] = MAKE_RESP_TYPE(FRAME_CMD_CIPSERVER);
+	respFrame[FRAME_POS_SIZE_LSB] = LOBYTE(FRAME_SIZE_CIPSERVER);
+	respFrame[FRAME_POS_SIZE_MSB] = HIBYTE(FRAME_SIZE_CIPSERVER);
+	respFrame[FRAME_POS_SEQ] = frame[FRAME_POS_SEQ];
 
-	respFrame[FRAME_POS_RESCODE] 		= SUCCESS;
+	respFrame[FRAME_POS_RESCODE] = SUCCESS;
 
 	memcpy(respFrame + FRAME_POS_CIPSERVER_OUT_TCP_IP, pTcpServer->proto.tcp->local_ip, 4);
+	memcpy(respFrame + FRAME_POS_CIPSERVER_OUT_TCP_PORT, &pTcpServer->proto.tcp->local_port, 2);
+	memcpy(respFrame + FRAME_POS_CIPSERVER_OUT_UDP_IP, pUdpServer->proto.udp->local_ip, 4);
+	memcpy(respFrame + FRAME_POS_CIPSERVER_OUT_UDP_PORT, &pUdpServer->proto.udp->local_ip, 4);
 
 	return sendFrame(checksum(respFrame));
 }
@@ -53,18 +56,82 @@ uint8_t command_CIPSERVER_handler(uint8_t* frame)
 	// don't use buffers that are too large
 	uint8_t respFrame[FRAME_LENGTH_SHORT];
 
-	respFrame[FRAME_POS_MAGIC] 			= FRAME_MAGIC;
-	respFrame[FRAME_POS_TYPE] 			= MAKE_RESP_TYPE(FRAME_CMD_GMR);
-	respFrame[FRAME_POS_SIZE_LSB] 		= LOBYTE(FRAME_SIZE_GMR);
-	respFrame[FRAME_POS_SIZE_MSB] 		= HIBYTE(FRAME_SIZE_GMR);
-	respFrame[FRAME_POS_SEQ] 			= frame[FRAME_POS_SEQ];
+	// enable or disable
+	if ((frame[FRAME_POS_CIPSERVER_IN_FLAGS] & FLAG_CIPSERVER_ACTION_MASK) == FLAG_CIPSERVER_STOP)
+	{
+		// we need stop; TCP or UDP ?
+		if ((frame[FRAME_POS_CIPSERVER_IN_FLAGS] & FLAG_CIPSERVER_PROTO_MASK) == FLAG_CIPSERVER_TCP)
+		{
+			// stop the TCP server
+			if (pTcpServer != NULL)
+			{
+				// how ?
+			}
+			else
+			{
+				return sendResultFrame(frame, ERROR_SERVER_NOTSTARTED);
+			}
+		}
+		else
+		{
+			// stop the UDP server
+			if (pUdpServer != NULL)
+			{
+				// how ?
+			}
+			else
+			{
+				return sendResultFrame(frame, ERROR_SERVER_NOTSTARTED);
+			}
+		}
+	}
+	else
+	{
+		// we need start; TCP or UDP ?
+		if ((frame[FRAME_POS_CIPSERVER_IN_FLAGS] & FLAG_CIPSERVER_PROTO_MASK) == FLAG_CIPSERVER_TCP)
+		{
+			// start the TCP server
+			pTcpServer = (struct espconn *) os_zalloc(sizeof(struct espconn));
+			if (pTcpServer == NULL)
+			{
+				return sendResultFrame(frame, ERROR_ESPCONN_ALLOC);
+			}
 
-	respFrame[FRAME_POS_RESCODE] 		= SUCCESS;
+			pTcpServer->type = ESPCONN_TCP;
+			pTcpServer->state = ESPCONN_NONE;
+			pTcpServer->proto.tcp = (esp_tcp *) os_zalloc(sizeof(esp_tcp));
+			pTcpServer->proto.tcp->local_port = *(int*) (frame + FRAME_POS_CIPSERVER_IN_PORT);
+			espconn_regist_connectcb(pTcpServer, at_tcpserver_listen);
+			espconn_accept(pTcpServer);
+			espconn_regist_time(pTcpServer, server_timeover, 0);
+		}
+		else
+		{
+			// start the UDP server
+			pUdpServer = (struct espconn *) os_zalloc(sizeof(struct espconn));
+			if (pUdpServer == NULL)
+			{
+				return sendResultFrame(frame, ERROR_ESPCONN_ALLOC);
+			}
 
-	respFrame[FRAME_POS_GMR_FRAMEVER] 	= FRAME_VERSION;
-	respFrame[FRAME_POS_GMR_SDKMAJ] 	= SDK_MAJOR;
-	respFrame[FRAME_POS_GMR_SDKMIN] 	= SDK_MINOR;
-	respFrame[FRAME_POS_GMR_SDKREV] 	= SDK_REVISION;
+			pUdpServer->type = ESPCONN_UDP;
+			pUdpServer->state = ESPCONN_NONE;
+			pUdpServer->proto.udp = (esp_udp *) os_zalloc(sizeof(esp_udp));
+			pUdpServer->proto.udp->local_port = *(int*) (frame + FRAME_POS_CIPSERVER_IN_PORT);
+			pUdpServer->reverse = NULL;
+			espconn_regist_recvcb(pUdpServer, at_udpserver_recv);
+
+			sint8_t result = espconn_create(pUdpServer);
+			if (result == 0)
+			{
+				return sendResultFrame(frame, SUCCESS);
+			}
+			else
+			{
+				// error code
+			}
+		}
+	}
 
 	return sendFrame(checksum(respFrame));
 }

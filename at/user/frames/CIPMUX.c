@@ -40,7 +40,7 @@ uint8_t command_CIPMUX_handler(uint8_t* frame)
 	if (mdState == m_linked)
 	{
 		// can't change this parameter while connected
-		return sendErrorFrame(frame, ERROR_ALREADY_CONNECTED);
+		return sendResultFrame(frame, ERROR_ALREADY_CONNECTED);
 	}
 
 	// process command first

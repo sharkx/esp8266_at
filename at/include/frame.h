@@ -136,7 +136,7 @@ uint8_t 	isCommandFrame(uint8_t* frame);
 
 uint8_t		processFrame(uint8_t* frameIn);
 uint8_t		sendFrame(uint8_t* frameToSend);
-uint8_t 	sendErrorFrame(uint8_t* frameIn, uint8_t errorCode);
+uint8_t 	sendResultFrame(uint8_t* frameIn, uint8_t errorCode);
 
 uint8_t*	checksum(uint8_t* frame);
 

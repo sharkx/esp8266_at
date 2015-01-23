@@ -24,7 +24,7 @@ uint8_t response_IPD_handler(ESPCONN* arg, char* pdata, unsigned short len)
 
 	if (len > (FRAME_LENGTH_MAX - FRAME_OVERHEAD + 2))
 	{
-		return sendErrorFrame(NULL, ERROR_INBOUND_DATA_TOO_LONG);
+		return sendResultFrame(NULL, ERROR_INBOUND_DATA_TOO_LONG);
 	}
 	else
 	{
