@@ -19,6 +19,7 @@
 #define __AT_CMD_H
 
 #include "at.h"
+#include "ip.h"
 #include "at_wifiCmd.h"
 #include "at_miscCmd.h"
 #include "at_ipCmd.h"
