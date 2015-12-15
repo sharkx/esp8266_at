@@ -30,7 +30,9 @@ frameHandlerStruct frameHandlers[] =
 	{ request_CWJAP_handler, command_CWJAP_handler },
 	{ NULL, command_CWQAP_handler },
 	{ request_CIPSTART_handler, command_CIPSTART_handler },
-	{ request_CIPSERVER_handler, command_CIPSERVER_handler }
+	{ request_CIPSERVER_handler, command_CIPSERVER_handler },
+	{ request_CIPMUX_handler, command_CIPMUX_handler },
+	{ request_GPIO_handler, command_GPIO_handler }
 };
 
 uint16_t getFrameSize(uint8_t* frame)

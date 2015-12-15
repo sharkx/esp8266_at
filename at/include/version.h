@@ -24,7 +24,7 @@
 //#define AT_VERSION   (AT_VERSION_main << 8 | AT_VERSION_sub)
 #define AT_VERSION   "0020"
 
-#define FRAME_VERSION		0x01
+#define FRAME_VERSION		0x02
 #define SDK_MAJOR			0x00
 #define SDK_MINOR			0x09
 #define SDK_REVISION		0x04

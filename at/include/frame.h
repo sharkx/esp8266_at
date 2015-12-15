@@ -43,6 +43,7 @@ frame.h
 #include "frames/CIPSTART.h"
 #include "frames/CIPSERVER.h"
 #include "frames/CIPMUX.h"
+#include "frames/GPIO.h"
 
 #define FRAME_MAGIC				0x88
 
@@ -105,6 +106,7 @@ frame.h
 #define FRAME_CMD_CIPSTART				(FRAME_CMD_BASE + 0x05)
 #define FRAME_CMD_CIPSERVER				(FRAME_CMD_BASE + 0x06)
 #define FRAME_CMD_CIPMUX				(FRAME_CMD_BASE + 0x07)
+#define FRAME_CMD_GPIO					(FRAME_CMD_BASE + 0x08)
 
 
 #define SUCCESS					0x00
