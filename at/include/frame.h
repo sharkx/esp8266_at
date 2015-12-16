@@ -44,6 +44,7 @@ frame.h
 #include "frames/CIPSERVER.h"
 #include "frames/CIPMUX.h"
 #include "frames/GPIO.h"
+#include "frames/RGPIO.h"
 
 #define FRAME_MAGIC				0x88
 
@@ -88,7 +89,7 @@ frame.h
 // status frames
 #define FRAME_NO_CMD			0
 
-#define MAKE_FRAME_TYPE(R, T)	(0x80 | ((r & 0x03)<<5) | (T & FRAME_COMMAND_MASK))
+#define MAKE_FRAME_TYPE(R, T)	(0x80 | ((R & 0x03)<<5) | (T & FRAME_COMMAND_MASK))
 
 #define MAKE_REQ_TYPE(T)		(0x80 | FRAME_TYPE_REQUEST  | (T & FRAME_COMMAND_MASK))
 #define MAKE_CMD_TYPE(T)		(0x80 | FRAME_TYPE_COMMAND  | (T & FRAME_COMMAND_MASK))
@@ -107,6 +108,7 @@ frame.h
 #define FRAME_CMD_CIPSERVER				(FRAME_CMD_BASE + 0x06)
 #define FRAME_CMD_CIPMUX				(FRAME_CMD_BASE + 0x07)
 #define FRAME_CMD_GPIO					(FRAME_CMD_BASE + 0x08)
+#define FRAME_CMD_RGPIO					(FRAME_CMD_BASE + 0x09)
 
 
 #define SUCCESS					0x00
