@@ -30,21 +30,8 @@ extern void user_esp_platform_load_param(void *param, uint16 len);
 
 void user_init(void)
 {
-  uint8_t userbin;
-  uint32_t upFlag;
-  at_uartType tempUart;
-
   gpio_init();
-
-  user_esp_platform_load_param((uint32 *)&tempUart, sizeof(at_uartType));
-  if(tempUart.saved == 1)
-  {
-    uart_init(tempUart.baud, BIT_RATE_19200);
-  }
-  else
-  {
-    uart_init(BIT_RATE_19200, BIT_RATE_19200);
-  }
+  config_init();
 
   // accept all commands and reply as frames
   g_comProtocolMode = COM_INBOUND_BOTH | COM_OUTBOUND_FRAME;

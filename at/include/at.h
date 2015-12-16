@@ -67,11 +67,6 @@ typedef struct
 	void (*at_exeCmd)(uint8_t id);
 } at_funcationType;
 
-typedef struct
-{
-	uint32_t baud;
-	uint32_t saved;
-} at_uartType;
 
 void at_init(void);
 void at_cmdProcess(uint8_t *pAtRcvData);

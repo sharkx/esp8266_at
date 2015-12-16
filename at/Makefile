@@ -24,7 +24,7 @@ ESPPORT		?= COM4
 TARGET		= app
 
 # which modules (subdirectories) of the project to include in compiling
-MODULES		= driver user user/frames
+MODULES		= driver user user/frames user/automation user/config
 EXTRA_INCDIR    = include $(SDK_BASE)/../include
 
 # libraries used in this project, mainly provided by the SDK
